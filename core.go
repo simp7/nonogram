@@ -7,7 +7,7 @@ import (
 )
 
 type Core interface {
-	LoadSetting(languageFormatter file.Formatter) (result setting.Config, err error)
+	LoadSetting() (result setting.Config, err error)
 	SaveSetting(target setting.Config) error
 	InitMap(bitmap [][]bool) unit.Map
 	LoadMap(name string) (result unit.Map, err error)

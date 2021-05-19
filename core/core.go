@@ -9,16 +9,17 @@ import (
 const LatestLanguageVersion = "1.0"
 
 type core struct {
-	fs               file.System
-	prototype        unit.Map
-	settingFormatter file.Formatter
+	fs                file.System
+	prototype         unit.Map
+	settingFormatter  file.Formatter
+	languageFormatter file.Formatter
 }
 
-func New(fs file.System, prototype unit.Map, settingFormat file.Formatter) *core {
-	return &core{fs, prototype, settingFormat}
+func New(fs file.System, prototype unit.Map, settingFormat file.Formatter, languageFormat file.Formatter) *core {
+	return &core{fs, prototype, settingFormat, languageFormat}
 }
 
-func (c *core) LoadSetting(languageFormatter file.Formatter) (result setting.Config, err error) {
+func (c *core) LoadSetting() (result setting.Config, err error) {
 
 	loader, err := c.fs.Setting(c.settingFormatter)
 	if err != nil {
@@ -30,14 +31,14 @@ func (c *core) LoadSetting(languageFormatter file.Formatter) (result setting.Con
 		return
 	}
 
-	result.Text, err = c.initLanguage(result.Language, languageFormatter)
+	result.Text, err = c.initLanguage(result.Language)
 	return
 
 }
 
-func (c *core) initLanguage(language string, formatter file.Formatter) (result setting.Text, err error) {
+func (c *core) initLanguage(language string) (result setting.Text, err error) {
 
-	loader, err := c.fs.LanguageOf(language, formatter)
+	loader, err := c.fs.LanguageOf(language, c.languageFormatter)
 	if err != nil {
 		return
 	}
@@ -50,7 +51,7 @@ func (c *core) initLanguage(language string, formatter file.Formatter) (result s
 			return
 		}
 
-		loader, err = c.fs.LanguageOf(language, formatter)
+		loader, err = c.fs.LanguageOf(language, c.languageFormatter)
 		if err != nil {
 			return
 		}
