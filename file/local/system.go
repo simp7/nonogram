@@ -46,6 +46,31 @@ func (s *system) Language() (file.Updater, error) {
 	return languageUpdater()
 }
 
-func (s *system) Maps(unit int) file.MapList {
-	return newMapList(unit)
+func (s *system) Maps() (result []string, err error) {
+
+	mapDir, err := get(mapsDir)
+	if err != nil {
+		return
+	}
+
+	files, err := readDir(mapDir)
+	if err != nil {
+		return
+	}
+
+	wg := sync.WaitGroup{}
+	wg.Add(len(files))
+
+	result = make([]string, len(files))
+
+	go func() {
+		for i, v := range files {
+			result[i] = v.Name()
+			wg.Done()
+		}
+	}()
+	wg.Wait()
+
+	return
+
 }

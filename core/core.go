@@ -114,6 +114,6 @@ func (c *core) SaveMap(name string, nonomap unit.Map) error {
 
 }
 
-func (c *core) MapList(unit int) file.MapList {
-	return c.fs.Maps(unit)
+func (c *core) Maps() ([]string, error) {
+	return c.fs.Maps()
 }

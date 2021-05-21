@@ -6,5 +6,5 @@ type System interface {
 	Setting(formatter Formatter) (Storage, error)                    //Setting returns Storage of setting file.
 	Language() (Updater, error)                                      //Language returns Updater of language directory.
 	LanguageOf(language string, formatter Formatter) (Loader, error) //LanguageOf returns Loader of language file.
-	Maps(by int) MapList                                             //Maps returns MapList of map directory within unit from argument.
+	Maps() ([]string, error)                                         //Maps returns MapList of map directory within unit from argument.
 }

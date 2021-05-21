@@ -27,7 +27,7 @@ func (l *loader) Load(target interface{}) error {
 
 func languageLoader(language string, formatter file.Formatter) (*loader, error) {
 
-	path, err := get(LANGUAGEDIR)
+	path, err := get(languageDir)
 
 	if err != nil {
 		return nil, err
