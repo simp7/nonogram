@@ -3,8 +3,8 @@ package local
 type pathID string
 
 const (
-	ROOT        pathID = ""
-	SETTING            = "setting.json"
-	MAPSDIR            = "maps"
-	LANGUAGEDIR        = "language"
+	root        pathID = ""
+	setting            = "setting.json"
+	mapsDir            = "maps"
+	languageDir        = "language"
 )

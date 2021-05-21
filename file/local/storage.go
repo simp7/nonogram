@@ -27,11 +27,11 @@ func newStorage(name pathID, formatter file.Formatter, leaf ...string) (*storage
 }
 
 func mapStorage(name string, formatter file.Formatter) (*storage, error) {
-	return newStorage(MAPSDIR, formatter, name+".nm")
+	return newStorage(mapsDir, formatter, name+".nm")
 }
 
 func settingStorage(formatter file.Formatter) (*storage, error) {
-	return newStorage(SETTING, formatter)
+	return newStorage(setting, formatter)
 }
 
 func (s storage) Save(i interface{}) error {

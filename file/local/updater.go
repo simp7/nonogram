@@ -19,11 +19,11 @@ func newUpdater(source string, target pathID) (*updater, error) {
 }
 
 func allUpdater() (*updater, error) {
-	return newUpdater("skel", ROOT)
+	return newUpdater("skel", root)
 }
 
 func languageUpdater() (*updater, error) {
-	return newUpdater(path.Join("skel", "language"), LANGUAGEDIR)
+	return newUpdater(path.Join("skel", "language"), languageDir)
 }
 
 func (u *updater) Update() {
