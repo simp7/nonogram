@@ -23,7 +23,7 @@ func rootAddress() address {
 }
 
 func mapAddress() address {
-	return addressTo("map")
+	return addressTo("maps")
 }
 
 func languageAddress() address {

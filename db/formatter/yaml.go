@@ -6,7 +6,7 @@ import (
 )
 
 type yamlFormatter struct {
-	Buffer
+	*Buffer
 	*yaml.Encoder
 	*yaml.Decoder
 }
@@ -14,8 +14,9 @@ type yamlFormatter struct {
 // Yaml returns db.Formatter that includes encoder and decoder of yaml.
 func Yaml() db.Formatter {
 	y := new(yamlFormatter)
-	y.Encoder = yaml.NewEncoder(&y.Buffer)
-	y.Decoder = yaml.NewDecoder(&y.Buffer)
+	y.Buffer = Raw()
+	y.Encoder = yaml.NewEncoder(y.Buffer)
+	y.Decoder = yaml.NewDecoder(y.Buffer)
 	return y
 }
 
