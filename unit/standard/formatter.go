@@ -10,8 +10,14 @@ import (
 )
 
 var (
-	invalidType = errors.New("this file is not valid for map")
-	invalidMap  = errors.New("map file has been broken")
+	invalidSize   = errors.New("this file contains invalid size")
+	invalidFormat = errors.New("this file doesn't comply with file format")
+	invalidMap    = errors.New("map file has been broken")
+)
+
+const (
+	heightLimit = 30
+	widthLimit  = 30
 )
 
 type formatter struct {
@@ -34,17 +40,17 @@ func (f *formatter) Encode(i interface{}) error {
 		f.raw = convert(i.(*nonomap))
 		return nil
 	default:
-		return invalidType
+		return invalidFormat
 	}
 
 }
 
 func convert(nmap *nonomap) []byte {
 
-	result := fmt.Sprintf("%d/%d", nmap.GetWidth(), nmap.GetHeight())
+	result := fmt.Sprintf("%d/%d", nmap.Width(), nmap.Height())
 
-	for _, row := range nmap.Bitmap {
-		result += fmt.Sprintf("/%d", getRowValue(nmap.GetWidth(), row))
+	for _, row := range nmap.bitmap {
+		result += fmt.Sprintf("/%d", getRowValue(nmap.Width(), row))
 	}
 
 	return []byte(result)
@@ -68,17 +74,16 @@ func getRowValue(width int, row []bool) int {
 func (f *formatter) Decode(i interface{}) error {
 
 	switch i.(type) {
-	case *unit.Map:
-		origin := i.(*unit.Map)
-		*origin = f.data
+	case unit.Map:
+		f.data = i.(unit.Map)
 		return nil
 	default:
-		return invalidType
+		return invalidFormat
 	}
 
 }
 
-func (f *formatter) GetRaw(content []byte) error {
+func (f *formatter) Raw(content []byte) error {
 
 	f.raw = content
 
@@ -87,12 +92,12 @@ func (f *formatter) GetRaw(content []byte) error {
 	data = strings.TrimSpace(data)
 	elements := strings.Split(data, "/")
 
-	width, err := strconv.Atoi(elements[0])
+	width, err := f.getHeight(elements[0])
 	if err != nil {
 		return err
 	}
 
-	height, err := strconv.Atoi(elements[1])
+	height, err := f.getWidth(elements[1])
 	if err != nil {
 		return err
 	}
@@ -138,4 +143,24 @@ func getBitmapRow(value, width int) []bool {
 
 func (f *formatter) Content() []byte {
 	return f.raw
+}
+
+func (f *formatter) Extension() string {
+	return "nm"
+}
+
+func (f *formatter) getHeight(data string) (height int, err error) {
+	height, err = strconv.Atoi(data)
+	if !(height > 0 && height <= heightLimit) {
+		err = invalidSize
+	}
+	return
+}
+
+func (f *formatter) getWidth(data string) (width int, err error) {
+	width, err = strconv.Atoi(data)
+	if !(width > 0 && width <= widthLimit) {
+		err = invalidSize
+	}
+	return
 }

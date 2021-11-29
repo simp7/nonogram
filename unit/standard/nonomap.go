@@ -5,22 +5,22 @@ import (
 )
 
 type nonomap struct {
-	Width  int
-	Height int
-	Bitmap [][]bool
+	width  int
+	height int
+	bitmap [][]bool
 }
 
 /*
 	nonomap is divided into 3 parts and has arguments equal or more than 3, which is separated by '/'.
 
-	First two elements indicates Width and Height respectively.
+	First two elements indicates width and height respectively.
 
 	Rest elements indicates actual map which player has to solve.
 	Each elements indicates map data of each line.
-	They are designated by Bitmap, which 0 is blank and 1 is filled one.
+	They are designated by bitmap, which 0 is blank and 1 is filled one.
 
-	Since the size of int is 32bits, Width of maps can be equal or less than 32 mathematically.
-	But because of display's limit, Width and Height can't be more than 25
+	Since the size of int is 32bits, width of maps can be equal or less than 32 mathematically.
+	But because of display's limit, width and height can't be more than 25
 
 	When it comes to player's map, 2 is checked one where player thinks that cell is blank.
 
@@ -36,16 +36,16 @@ func (nm *nonomap) Init(bitmap [][]bool) unit.Map {
 
 	result := new(nonomap)
 
-	result.Height = len(bitmap)
-	result.Width = len(bitmap[0])
-	result.Bitmap = bitmap
+	result.height = len(bitmap)
+	result.width = len(bitmap[0])
+	result.bitmap = bitmap
 
 	return result
 
 }
 
 func (nm *nonomap) ShouldFilled(x int, y int) bool {
-	return nm.Bitmap[y][x]
+	return nm.bitmap[y][x]
 }
 
 func getMaxLength(data [][]int) int {
@@ -60,16 +60,16 @@ func getMaxLength(data [][]int) int {
 
 func (nm *nonomap) createHorizontalProblemData() [][]int {
 
-	horizontal := make([][]int, nm.Height)
+	horizontal := make([][]int, nm.height)
 
-	for i := 0; i < nm.Height; i++ {
+	for i := 0; i < nm.height; i++ {
 
 		previousCell := false
 		tmp := 0
 
-		for j := 0; j < nm.Width; j++ {
+		for j := 0; j < nm.width; j++ {
 
-			if nm.Bitmap[i][j] {
+			if nm.bitmap[i][j] {
 				tmp++
 				previousCell = true
 			} else {
@@ -98,15 +98,15 @@ func (nm *nonomap) createHorizontalProblemData() [][]int {
 
 func (nm *nonomap) createVerticalProblemData() [][]int {
 
-	vertical := make([][]int, nm.Width)
+	vertical := make([][]int, nm.width)
 
-	for i := 0; i < nm.Width; i++ {
+	for i := 0; i < nm.width; i++ {
 
 		previousCell := false
 		tmp := 0
 
-		for j := 0; j < nm.Height; j++ {
-			if nm.Bitmap[j][i] {
+		for j := 0; j < nm.height; j++ {
+			if nm.bitmap[j][i] {
 				tmp++
 				previousCell = true
 			} else {
@@ -144,21 +144,21 @@ func (nm *nonomap) CreateProblem() unit.Problem {
 
 }
 
-//This function returns Height of nonomap
+//This function returns height of nonomap
 
-func (nm *nonomap) GetHeight() int {
-	return nm.Height
+func (nm *nonomap) Height() int {
+	return nm.height
 }
 
-func (nm *nonomap) GetWidth() int {
-	return nm.Width
+func (nm *nonomap) Width() int {
+	return nm.width
 }
 
 func (nm *nonomap) FilledTotal() (total int) {
 
 	total = 0
 
-	for n := range nm.Bitmap {
+	for n := range nm.bitmap {
 		total += nm.countRow(n)
 	}
 
@@ -168,7 +168,7 @@ func (nm *nonomap) FilledTotal() (total int) {
 
 func (nm *nonomap) countRow(y int) int {
 	result := 0
-	for _, v := range nm.Bitmap[y] {
+	for _, v := range nm.bitmap[y] {
 		if v {
 			result++
 		}
@@ -185,12 +185,10 @@ func (nm *nonomap) WidthLimit() int {
 }
 
 func (nm *nonomap) CheckValidity() error {
-
-	if nm.Height > nm.HeightLimit() || nm.Width > nm.WidthLimit() || nm.Height <= 0 || nm.Width <= 0 {
+	if nm.height > nm.HeightLimit() || nm.width > nm.WidthLimit() || nm.height <= 0 || nm.width <= 0 {
 		return invalidMap
 	}
 	return nil
-
 }
 
 func (nm *nonomap) GetFormatter() unit.Formatter {

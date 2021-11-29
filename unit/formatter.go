@@ -1,9 +1,10 @@
 package unit
 
-//Formatter is just an duplication of file.GetFormatter.
+//Formatter is just a duplication of file.Formatter.
 type Formatter interface {
 	Encode(interface{}) error
 	Decode(interface{}) error
-	GetRaw(from []byte) error
+	Raw(from []byte) error
 	Content() []byte
+	Extension() string
 }

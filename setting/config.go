@@ -3,5 +3,9 @@ package setting
 type Config struct {
 	Color
 	Text
-	Language string //Language is an language of this application.
+	Language string //Language is a language of this application.
+}
+
+func (c Config) ID() string {
+	return c.Language
 }

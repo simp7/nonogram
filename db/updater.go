@@ -1,6 +1,6 @@
-package file
+package db
 
 //Updater is an interface that browse files from somewhere to another.
 type Updater interface {
-	Update() //Update updates files.
+	Update() error //Update updates files.
 }

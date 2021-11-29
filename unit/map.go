@@ -4,8 +4,8 @@ package unit
 type Map interface {
 	ShouldFilled(x, y int) bool //ShouldFilled returns whether filling selected cell is right.
 	CreateProblem() Problem     //CreateProblem returns Problem of current map.
-	GetHeight() int             //GetHeight returns height of map.
-	GetWidth() int              //GetWidth returns width of map.
+	Height() int                //Height returns height of map.
+	Width() int                 //Width returns width of map.
 	FilledTotal() int           //FilledTotal returns amount of cells to fill.
 	CheckValidity() error       //CheckValidity returns whether the map is valid.
 	HeightLimit() int           //HeightLimit returns limit of map's height.
