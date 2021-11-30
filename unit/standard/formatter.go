@@ -37,7 +37,7 @@ func (f *formatter) Encode(i interface{}) error {
 	switch i.(type) {
 	case *nonomap:
 		f.data = i.(*nonomap)
-		f.raw = convert(i.(nonomap))
+		f.raw = convert(f.data)
 		return nil
 	default:
 		return invalidFormat
@@ -45,7 +45,7 @@ func (f *formatter) Encode(i interface{}) error {
 
 }
 
-func convert(nmap nonomap) []byte {
+func convert(nmap *nonomap) []byte {
 
 	result := fmt.Sprintf("%d/%d", nmap.Width(), nmap.Height())
 
