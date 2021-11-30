@@ -6,7 +6,7 @@ import (
 )
 
 const LatestLanguageVersion = "1.0"
-const SettingFile = "setting.json"
+const SettingFile = "setting"
 
 type Core struct {
 	fs        System
@@ -67,6 +67,7 @@ func (c *Core) InitMap(bitmap [][]bool) unit.Map {
 }
 
 func (c *Core) LoadMap(name string) (result unit.Map, err error) {
+	result = c.prototype
 	loader := c.fs.Map()
 	err = loader.Load(name, result)
 	return

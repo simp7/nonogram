@@ -21,13 +21,13 @@ const (
 )
 
 type formatter struct {
-	data unit.Map
+	data *nonomap
 	raw  []byte
 }
 
 func newFormatter() *formatter {
 	f := new(formatter)
-	f.data = Prototype()
+	f.data = Prototype().(*nonomap)
 	f.raw = make([]byte, 0)
 	return f
 }
@@ -37,7 +37,7 @@ func (f *formatter) Encode(i interface{}) error {
 	switch i.(type) {
 	case *nonomap:
 		f.data = i.(*nonomap)
-		f.raw = convert(i.(*nonomap))
+		f.raw = convert(i.(nonomap))
 		return nil
 	default:
 		return invalidFormat
@@ -45,7 +45,7 @@ func (f *formatter) Encode(i interface{}) error {
 
 }
 
-func convert(nmap *nonomap) []byte {
+func convert(nmap nonomap) []byte {
 
 	result := fmt.Sprintf("%d/%d", nmap.Width(), nmap.Height())
 
@@ -75,7 +75,9 @@ func (f *formatter) Decode(i interface{}) error {
 
 	switch i.(type) {
 	case unit.Map:
-		f.data = i.(unit.Map)
+		origin := i.(*nonomap)
+		*origin = *f.data
+		i = f.data
 		return nil
 	default:
 		return invalidFormat
@@ -107,7 +109,7 @@ func (f *formatter) Raw(content []byte) error {
 		return err
 	}
 
-	f.data = f.data.Init(bitmap)
+	f.data = f.data.Init(bitmap).(*nonomap)
 	return f.data.CheckValidity()
 
 }
