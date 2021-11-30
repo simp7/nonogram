@@ -24,7 +24,8 @@ func (c *Core) LoadSetting() (result setting.Config, err error) {
 		return
 	}
 
-	result.Text, err = c.initLanguage(result.Language)
+	text, err := c.initLanguage(result.Language)
+	result.SetText(text)
 	return
 
 }
@@ -32,7 +33,7 @@ func (c *Core) LoadSetting() (result setting.Config, err error) {
 func (c *Core) initLanguage(language string) (result setting.Text, err error) {
 
 	immutable := c.fs.Language()
-	if immutable.Load(language+".json", &result) != nil {
+	if immutable.Load(language, &result) != nil {
 		return
 	}
 
@@ -40,7 +41,7 @@ func (c *Core) initLanguage(language string) (result setting.Text, err error) {
 		if c.updateLanguage() != nil {
 			return
 		}
-		err = immutable.Load(language+".json", &result)
+		err = immutable.Load(language, &result)
 	}
 
 	return
@@ -50,7 +51,7 @@ func (c *Core) initLanguage(language string) (result setting.Text, err error) {
 func (c *Core) SaveSetting(target setting.Config) error {
 
 	willSaved := target
-	willSaved.Text = setting.Text{}
+	willSaved.SetText(setting.Text{})
 
 	saver := c.fs.Setting()
 	return saver.Save("setting", willSaved)

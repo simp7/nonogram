@@ -6,6 +6,6 @@ type Config struct {
 	Language string //Language is a language of this application.
 }
 
-func (c Config) ID() string {
-	return c.Language
+func (c *Config) SetText(t Text) {
+	c.Text = t
 }
