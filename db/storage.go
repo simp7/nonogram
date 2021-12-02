@@ -4,4 +4,5 @@ package db
 type Storage interface {
 	Saver
 	Loader
+	Updater
 }

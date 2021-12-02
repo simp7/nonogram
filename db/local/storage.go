@@ -7,6 +7,7 @@ import (
 type storage struct {
 	*saver
 	*loader
+	*updater
 }
 
 func newStorage(path address, formatter db.Formatter) *storage {
@@ -15,6 +16,7 @@ func newStorage(path address, formatter db.Formatter) *storage {
 
 	s.saver = &saver{path, formatter}
 	s.loader = &loader{path, formatter}
+	s.updater = &updater{path}
 
 	return s
 

@@ -119,11 +119,11 @@ func (f *formatter) getBitmap(data []string) (result [][]bool, err error) {
 
 }
 
-func convertToBitmap(width, height int, data []string) ([][]bool, error) {
+func convertToBitmap(width, height int, mapData []string) ([][]bool, error) {
 
 	result := make([][]bool, height)
 
-	for i, v := range data {
+	for i, v := range mapData {
 		num, err := strconv.Atoi(v)
 		if err != nil {
 			return nil, invalidMap
@@ -156,18 +156,30 @@ func (f *formatter) Extension() string {
 	return "nm"
 }
 
-func (f *formatter) getHeight(data string) (height int, err error) {
-	height, err = strconv.Atoi(data)
+func (f *formatter) getHeight(heightData string) (height int, err error) {
+
+	if height, err = strconv.Atoi(heightData); err != nil {
+		return
+	}
+
 	if !(height > 0 && height <= heightLimit) {
 		err = invalidSize
 	}
+
 	return
+
 }
 
-func (f *formatter) getWidth(data string) (width int, err error) {
-	width, err = strconv.Atoi(data)
+func (f *formatter) getWidth(widthData string) (width int, err error) {
+
+	if width, err = strconv.Atoi(widthData); err != nil {
+		return
+	}
+
 	if !(width > 0 && width <= widthLimit) {
 		err = invalidSize
 	}
+
 	return
+
 }
