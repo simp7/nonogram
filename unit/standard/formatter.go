@@ -34,14 +34,13 @@ func newFormatter() *formatter {
 
 func (f *formatter) Encode(i interface{}) error {
 
-	switch i.(type) {
-	case *nonomap:
-		f.data = i.(*nonomap)
+	if source, ok := i.(*nonomap); ok {
+		f.data = source
 		f.raw = convert(f.data)
 		return nil
-	default:
-		return invalidFormat
 	}
+
+	return invalidFormat
 
 }
 
@@ -73,15 +72,13 @@ func getRowValue(width int, row []bool) int {
 
 func (f *formatter) Decode(i interface{}) error {
 
-	switch i.(type) {
-	case unit.Map:
+	if _, ok := i.(unit.Map); ok {
 		origin := i.(*nonomap)
 		*origin = *f.data
-		i = f.data
 		return nil
-	default:
-		return invalidFormat
 	}
+
+	return invalidFormat
 
 }
 
@@ -89,28 +86,36 @@ func (f *formatter) Raw(content []byte) error {
 
 	f.raw = content
 
-	data := string(content)
-
-	data = strings.TrimSpace(data)
-	elements := strings.Split(data, "/")
-
-	width, err := f.getHeight(elements[0])
-	if err != nil {
-		return err
-	}
-
-	height, err := f.getWidth(elements[1])
-	if err != nil {
-		return err
-	}
-
-	bitmap, err := convertToBitmap(width, height, elements[2:])
+	data := extractData(content)
+	bitmap, err := f.getBitmap(data)
 	if err != nil {
 		return err
 	}
 
 	f.data = f.data.Init(bitmap).(*nonomap)
 	return f.data.CheckValidity()
+
+}
+
+func extractData(str []byte) []string {
+	source := strings.TrimSpace(string(str))
+	return strings.Split(source, "/")
+}
+
+func (f *formatter) getBitmap(data []string) (result [][]bool, err error) {
+
+	var width, height int
+
+	if width, err = f.getHeight(data[0]); err != nil {
+		return
+	}
+
+	if height, err = f.getHeight(data[1]); err != nil {
+		return
+	}
+
+	result, err = convertToBitmap(width, height, data[2:])
+	return
 
 }
 
