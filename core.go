@@ -82,3 +82,18 @@ func (c *Core) SaveMap(name string, nonomap unit.Map) error {
 func (c *Core) Maps() ([]string, error) {
 	return c.fs.Maps()
 }
+
+func (c *Core) Initialize() (err error) {
+
+	if err = c.fs.Setting().Update(); err != nil {
+		return
+	}
+
+	if err = c.fs.Language().Update(); err != nil {
+		return
+	}
+
+	err = c.fs.Map().Update()
+	return
+
+}
