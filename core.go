@@ -13,8 +13,9 @@ type Core struct {
 	prototype unit.Map
 }
 
-func New(fs System, prototype unit.Map) *Core {
-	return &Core{fs: fs, prototype: prototype}
+func New(fs System, prototype unit.Map) (*Core, error) {
+	c := &Core{fs: fs, prototype: prototype}
+	return c, c.Update()
 }
 
 func (c *Core) LoadSetting() (result setting.Config, err error) {
@@ -83,7 +84,7 @@ func (c *Core) Maps() ([]string, error) {
 	return c.fs.Maps()
 }
 
-func (c *Core) Initialize() (err error) {
+func (c *Core) Update() (err error) {
 
 	if err = c.fs.Setting().Update(); err != nil {
 		return
