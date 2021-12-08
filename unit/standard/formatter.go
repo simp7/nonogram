@@ -10,9 +10,10 @@ import (
 )
 
 var (
-	invalidSize   = errors.New("this file contains invalid size")
-	invalidFormat = errors.New("this file doesn't comply with file format")
-	invalidMap    = errors.New("map file has been broken")
+	invalidSize      = errors.New("this file contains invalid size")
+	invalidFormat    = errors.New("this file doesn't comply with file format")
+	invalidInterface = errors.New("interface in argument is not nonogram.Map")
+	invalidMap       = errors.New("map file has been broken")
 )
 
 const (
@@ -71,15 +72,18 @@ func getRowValue(width int, row []bool) int {
 }
 
 func (f *formatter) Decode(i interface{}) error {
+	if m, ok := i.(unit.Map); ok {
+		return f.decode(m)
+	}
+	return invalidInterface
+}
 
-	if _, ok := i.(unit.Map); ok {
-		origin := i.(*nonomap)
+func (f *formatter) decode(m unit.Map) error {
+	if origin, ok := m.(*nonomap); ok {
 		*origin = *f.data
 		return nil
 	}
-
 	return invalidFormat
-
 }
 
 func (f *formatter) Raw(content []byte) error {
